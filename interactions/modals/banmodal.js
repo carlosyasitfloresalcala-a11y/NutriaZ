@@ -15,29 +15,41 @@ module.exports = async function banModal(client, interaction) {
 
   const actualizado = await guardarJugador({
     ...player,
-    status: "baneado",
+    estado: "Baneado",
     banReason: motivo,
-    bannedBy: interaction.user.id,
-    bannedAt: new Date().toISOString()
+    ultimoCambio: new Date()
   });
 
-  await agregarHistorial(discordId, "BANEADO", motivo, interaction.user.id);
+  await agregarHistorial(
+    discordId,
+    "BANEADO",
+    motivo,
+    interaction.user.id,
+    interaction.user.tag
+  );
 
   const user = await client.users.fetch(discordId).catch(() => null);
   const member = await interaction.guild.members.fetch(discordId).catch(() => null);
 
   if (member) {
-    await member.ban({ reason: motivo }).catch(() => {});
+    await member.ban({
+      reason: motivo
+    }).catch(() => {});
   }
 
   await interaction.reply({
-    content: `⚫ Jugador baneado correctamente.\n🆔 Expediente: **${actualizado.expediente}**`,
+    content:
+      `⚫ Jugador baneado correctamente.\n` +
+      `🆔 Expediente: **${actualizado.expediente}**`,
     ephemeral: true
   });
 
   if (user) {
     await user.send(
-      `⛔ Has sido baneado.\n🆔 Expediente: **${actualizado.expediente}**\n📌 Motivo: **${motivo}**`
+      `⛔ Has sido baneado de la whitelist.\n\n` +
+      `🆔 Expediente: **${actualizado.expediente}**\n` +
+      `🎮 Gamertag: **${actualizado.gamertag}**\n` +
+      `📌 Motivo: **${motivo}**`
     ).catch(() => {});
   }
 };

@@ -15,13 +15,18 @@ module.exports = async function rechazoModal(client, interaction) {
 
   const actualizado = await guardarJugador({
     ...player,
-    status: "rechazado",
-    rejectedBy: interaction.user.id,
-    rejectedAt: new Date().toISOString(),
+    estado: "Rechazado",
+    ultimoCambio: new Date(),
     rejectReason: motivo
   });
 
-  await agregarHistorial(discordId, "RECHAZADO", motivo, interaction.user.id);
+  await agregarHistorial(
+    discordId,
+    "RECHAZADO",
+    motivo,
+    interaction.user.id,
+    interaction.user.tag
+  );
 
   const user = await client.users.fetch(discordId).catch(() => null);
 

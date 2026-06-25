@@ -8,16 +8,17 @@ module.exports = async function aprobar(client, interaction, discordId, player) 
 
   const actualizado = await guardarJugador({
     ...player,
-    status: "aprobado",
-    approvedBy: interaction.user.id,
-    approvedAt: new Date().toISOString()
+    estado: "Aprobado",
+    aprobadoPor: interaction.user.id,
+    fechaAprobacion: new Date()
   });
 
   await agregarHistorial(
     discordId,
     "APROBADO",
     "Solicitud aprobada",
-    interaction.user.id
+    interaction.user.id,
+    interaction.user.tag
   );
 
   if (member && config.whitelistRoleId) {

@@ -11,16 +11,16 @@ const { solicitudEmbed } = require("../../utils/embeds");
 module.exports = async function registroModal(client, interaction) {
   const existente = await buscarJugador(interaction.user.id);
 
-  if (existente && existente.status === "aprobado") {
+  if (existente && existente.estado === "Aprobado") {
     return interaction.reply({
       content: `❌ Ya estás aprobado.\n🆔 Expediente: **${existente.expediente}**`,
       ephemeral: true
     });
   }
 
-  if (existente && existente.status === "baneado") {
+  if (existente && existente.estado === "Baneado") {
     return interaction.reply({
-      content: `⛔ Estás baneado de la whitelist.\nMotivo: **${existente.banReason || "No registrado"}**`,
+      content: `⛔ Estás baneado de la whitelist.`,
       ephemeral: true
     });
   }
@@ -32,16 +32,13 @@ module.exports = async function registroModal(client, interaction) {
 
   const player = await guardarJugador({
     discordId: interaction.user.id,
-    username: interaction.user.tag,
+    discordTag: interaction.user.tag,
+    avatar: interaction.user.displayAvatarURL({ dynamic: true }),
     gamertag,
-    plataforma,
+    experiencia: plataforma,
     edad,
     pais,
-    status: "pendiente",
-    warnings: existente?.warnings || 0,
-    banReason: "",
-    createdAt: existente?.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    estado: "Pendiente",
     expediente: existente?.expediente
   });
 
@@ -49,17 +46,18 @@ module.exports = async function registroModal(client, interaction) {
     interaction.user.id,
     "REGISTRO",
     `Registro enviado con gamertag ${gamertag}`,
-    null
+    null,
+    "Sistema"
   );
 
   await interaction.reply({
     content:
       `✅ Tu solicitud fue enviada correctamente.\n\n` +
       `🆔 **Expediente:** ${player.expediente}\n` +
-      `🎮 **Gamertag:** ${gamertag}\n` +
-      `🕹️ **Plataforma:** ${plataforma}\n` +
-      `🎂 **Edad:** ${edad}\n` +
-      `🌎 **País:** ${pais}\n\n` +
+      `🎮 **Gamertag:** ${player.gamertag}\n` +
+      `🕹️ **Plataforma:** ${player.experiencia}\n` +
+      `🎂 **Edad:** ${player.edad}\n` +
+      `🌎 **País:** ${player.pais}\n\n` +
       `Ahora un administrador revisará tu solicitud.`,
     ephemeral: true
   });
