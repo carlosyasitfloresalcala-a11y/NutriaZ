@@ -7,7 +7,10 @@ module.exports = {
     .setDescription("Muestra el historial de un jugador")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(option =>
-      option.setName("usuario").setDescription("Jugador a revisar").setRequired(true)
+      option
+        .setName("usuario")
+        .setDescription("Jugador a revisar")
+        .setRequired(true)
     ),
 
   async execute(client, interaction) {
@@ -25,19 +28,26 @@ module.exports = {
 
     const textoHistorial = historial.length === 0
       ? "No hay historial registrado."
-      : historial.slice(-10).map((h, i) => {
-          const fecha = new Date(h.fecha).toLocaleString("es-MX");
-          const admin = h.adminId ? `<@${h.adminId}>` : "Sistema";
-          return `**${i + 1}. ${h.accion}**\n📅 ${fecha}\n👮 ${admin}\n📝 ${h.detalle}`;
-        }).join("\n\n");
+      : historial
+          .slice(-10)
+          .map((h, i) => {
+            const fecha = h.fecha
+              ? new Date(h.fecha).toLocaleString("es-MX")
+              : "Fecha no registrada";
+
+            const staff = h.staffId ? `<@${h.staffId}>` : (h.staffTag || "Sistema");
+
+            return `**${i + 1}. ${h.accion || "Acción"}**\n📅 ${fecha}\n👮 ${staff}\n📝 ${h.motivo || "Sin motivo"}`;
+          })
+          .join("\n\n");
 
     const embed = new EmbedBuilder()
       .setTitle(`📜 Historial — ${player.expediente || "Sin expediente"}`)
       .setColor(0x9b59b6)
       .addFields(
         { name: "👤 Discord", value: `${user}`, inline: true },
-        { name: "🎮 Gamertag", value: `**${player.gamertag}**`, inline: true },
-        { name: "📌 Estado", value: `**${player.status}**`, inline: true },
+        { name: "🎮 Gamertag", value: `**${player.gamertag || "No registrado"}**`, inline: true },
+        { name: "📌 Estado", value: `**${player.estado || "Sin estado"}**`, inline: true },
         { name: "📜 Últimos movimientos", value: textoHistorial }
       )
       .setTimestamp();

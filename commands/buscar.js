@@ -7,7 +7,10 @@ module.exports = {
     .setDescription("Busca un jugador por expediente, gamertag o Discord")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addStringOption(option =>
-      option.setName("texto").setDescription("Ejemplo: WL-000001, Charly2190 o Juan").setRequired(true)
+      option
+        .setName("texto")
+        .setDescription("Ejemplo: WL-000001, Charly2190 o Juan")
+        .setRequired(true)
     ),
 
   async execute(client, interaction) {
@@ -18,7 +21,7 @@ module.exports = {
     const resultados = players.filter(p =>
       (p.expediente || "").toLowerCase().includes(texto) ||
       (p.gamertag || "").toLowerCase().includes(texto) ||
-      (p.username || "").toLowerCase().includes(texto) ||
+      (p.discordTag || "").toLowerCase().includes(texto) ||
       (p.discordId || "").includes(texto)
     );
 
@@ -33,7 +36,7 @@ module.exports = {
       `**${i + 1}. ${p.expediente || "Sin expediente"}**\n` +
       `👤 Discord: <@${p.discordId}>\n` +
       `🎮 Gamertag: **${p.gamertag || "No registrado"}**\n` +
-      `📌 Estado: **${p.status || "sin estado"}**`
+      `📌 Estado: **${p.estado || "Sin estado"}**`
     ).join("\n\n");
 
     const embed = new EmbedBuilder()

@@ -9,7 +9,7 @@ module.exports = {
 
   async execute(client, interaction) {
     const db = await leerDB();
-    const aprobados = (db.players || []).filter(p => p.status === "aprobado");
+    const aprobados = (db.players || []).filter(p => p.estado === "Aprobado");
 
     const contenido = aprobados.length === 0
       ? "No hay jugadores aprobados."

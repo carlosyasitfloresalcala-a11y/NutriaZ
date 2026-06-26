@@ -9,7 +9,7 @@ module.exports = {
 
   async execute(client, interaction) {
     const db = await leerDB();
-    const players = (db.players || []).filter(p => p.status === "aprobado");
+    const players = (db.players || []).filter(p => p.estado === "Aprobado");
 
     if (players.length === 0) {
       return interaction.reply({
@@ -19,11 +19,13 @@ module.exports = {
     }
 
     const texto = players
-      .map((p, i) => `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`)
+      .map((p, i) =>
+        `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`
+      )
       .join("\n");
 
     await interaction.reply({
-      content: `✅ **Jugadores aprobados:**\n\n${texto}`,
+      content: `🟢 **Jugadores aprobados:**\n\n${texto}`,
       ephemeral: true
     });
   }

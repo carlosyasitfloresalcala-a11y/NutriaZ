@@ -1,4 +1,4 @@
-const { guardarJugador, buscarJugador, agregarHistorial } = require("../../utils/database");
+const { guardarJugador, buscarJugador, agregarHistorial } = require("../../../utils/database")
 
 module.exports = async function rechazoModal(client, interaction) {
   const discordId = interaction.customId.replace("modal_rechazar_", "");

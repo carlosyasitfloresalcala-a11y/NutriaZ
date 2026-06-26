@@ -7,7 +7,10 @@ module.exports = {
     .setDescription("Revisa el estado de un jugador")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addUserOption(option =>
-      option.setName("usuario").setDescription("Jugador a revisar").setRequired(true)
+      option
+        .setName("usuario")
+        .setDescription("Jugador a revisar")
+        .setRequired(true)
     ),
 
   async execute(client, interaction) {
@@ -25,10 +28,11 @@ module.exports = {
       content:
         `📌 Estado de ${user}\n` +
         `🆔 Expediente: **${player.expediente || "Sin expediente"}**\n` +
-        `🎮 Gamertag: **${player.gamertag}**\n` +
-        `Estado: **${player.status}**\n` +
-        `Advertencias: **${player.warnings || 0}**\n` +
-        `Razón ban: **${player.banReason || "Ninguna"}**`,
+        `🎮 Gamertag: **${player.gamertag || "No registrado"}**\n` +
+        `🌎 País: **${player.pais || "No registrado"}**\n` +
+        `🎂 Edad: **${player.edad || "No registrada"}**\n` +
+        `📌 Estado: **${player.estado || "Sin estado"}**\n` +
+        `⚠️ Advertencias: **${player.advertencias?.length || 0}**`,
       ephemeral: true
     });
   }

@@ -4,9 +4,9 @@ const {
   ButtonStyle
 } = require("discord.js");
 
-const config = require("../../config");
-const { guardarJugador, buscarJugador, agregarHistorial } = require("../../utils/database");
-const { solicitudEmbed } = require("../../utils/embeds");
+const config = require("../../../config");
+const { guardarJugador, buscarJugador, agregarHistorial } = require("../../../utils/database");
+const { solicitudEmbed } = require("../../../utils/embeds");
 
 module.exports = async function registroModal(client, interaction) {
   const existente = await buscarJugador(interaction.user.id);

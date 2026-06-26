@@ -7,31 +7,41 @@ module.exports = async function panelBotones(client, interaction) {
   const accion = interaction.customId;
 
   if (accion === "panel_lista") {
-    const aprobados = players.filter(p => p.status === "aprobado");
+    const aprobados = players.filter(p => p.estado === "Aprobado");
 
     if (aprobados.length === 0) {
-      return interaction.reply({ content: "No hay jugadores aprobados.", ephemeral: true });
+      return interaction.reply({
+        content: "No hay jugadores aprobados.",
+        ephemeral: true
+      });
     }
 
     const texto = aprobados
-      .map((p, i) => `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`)
+      .map((p, i) =>
+        `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`
+      )
       .join("\n");
 
     return interaction.reply({
-      content: `👥 **Jugadores aprobados:**\n\n${texto}`,
+      content: `🟢 **Jugadores aprobados:**\n\n${texto}`,
       ephemeral: true
     });
   }
 
   if (accion === "panel_pendientes") {
-    const pendientes = players.filter(p => p.status === "pendiente");
+    const pendientes = players.filter(p => p.estado === "Pendiente");
 
     if (pendientes.length === 0) {
-      return interaction.reply({ content: "No hay solicitudes pendientes.", ephemeral: true });
+      return interaction.reply({
+        content: "No hay solicitudes pendientes.",
+        ephemeral: true
+      });
     }
 
     const texto = pendientes
-      .map((p, i) => `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`)
+      .map((p, i) =>
+        `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`
+      )
       .join("\n");
 
     return interaction.reply({
@@ -41,17 +51,20 @@ module.exports = async function panelBotones(client, interaction) {
   }
 
   if (accion === "panel_baneados") {
-    const baneados = players.filter(p => p.status === "baneado");
+    const baneados = players.filter(p => p.estado === "Baneado");
 
     if (baneados.length === 0) {
-      return interaction.reply({ content: "No hay jugadores baneados.", ephemeral: true });
+      return interaction.reply({
+        content: "No hay jugadores baneados.",
+        ephemeral: true
+      });
     }
 
     const texto = baneados
       .map((p, i) =>
-        `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>\nMotivo: ${p.banReason || "No registrado"}`
+        `${i + 1}. **${p.expediente || "Sin expediente"}** — **${p.gamertag}** — <@${p.discordId}>`
       )
-      .join("\n\n");
+      .join("\n");
 
     return interaction.reply({
       content: `⚫ **Jugadores baneados:**\n\n${texto}`,
@@ -61,10 +74,10 @@ module.exports = async function panelBotones(client, interaction) {
 
   if (accion === "panel_estadisticas") {
     const total = players.length;
-    const aprobados = players.filter(p => p.status === "aprobado").length;
-    const pendientes = players.filter(p => p.status === "pendiente").length;
-    const rechazados = players.filter(p => p.status === "rechazado").length;
-    const baneados = players.filter(p => p.status === "baneado").length;
+    const aprobados = players.filter(p => p.estado === "Aprobado").length;
+    const pendientes = players.filter(p => p.estado === "Pendiente").length;
+    const rechazados = players.filter(p => p.estado === "Rechazado").length;
+    const baneados = players.filter(p => p.estado === "Baneado").length;
 
     return interaction.reply({
       content:
@@ -79,7 +92,7 @@ module.exports = async function panelBotones(client, interaction) {
   }
 
   if (accion === "panel_exportar") {
-    const aprobados = players.filter(p => p.status === "aprobado");
+    const aprobados = players.filter(p => p.estado === "Aprobado");
     const contenido = aprobados.map(p => p.gamertag).join("\n");
 
     const archivo = new AttachmentBuilder(
@@ -88,7 +101,7 @@ module.exports = async function panelBotones(client, interaction) {
     );
 
     return interaction.reply({
-      content: "📁 Aquí está tu archivo de whitelist.",
+      content: `📁 Whitelist exportada.\nJugadores aprobados: **${aprobados.length}**`,
       files: [archivo],
       ephemeral: true
     });
